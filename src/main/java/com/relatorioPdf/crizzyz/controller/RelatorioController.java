@@ -36,7 +36,7 @@ public class RelatorioController {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
         try {
-            float yMax = 380;
+            float yMax = 200;
             float xMax = 410;
             List<ListaRelatorio> listaRelatorios = listaProdutos();
             Color setGray = new DeviceRgb(84, 84, 84);
@@ -53,16 +53,16 @@ public class RelatorioController {
             p.setFixedPosition(75, 805, 600);
             document.add(p);
 
+            p = new Paragraph("GERAL").setBackgroundColor(Color.LIGHT_GRAY).setFontSize(11); // fixo
+            p.setFixedPosition(10, 780, 175);
+            document.add(p);
+
             float x;
             float y;
 
             for (x = 10; x <= xMax; ) {
                 for (y = 780; yMax <= y; ) {
                     for (ListaRelatorio listaRelatorio : listaRelatorios) {
-                        p = new Paragraph("GERAL").setBackgroundColor(Color.LIGHT_GRAY).setFontSize(11); // fixo
-                        p.setFixedPosition(x, y, 175);
-                        document.add(p);
-
                         p = new Paragraph(listaRelatorio.getTipoConsulta()).setBackgroundColor(setGray).setBold().setFontSize(11); // var - tipo consulta
                         p.setFixedPosition(x, y -= 30, 175);
                         document.add(p);
