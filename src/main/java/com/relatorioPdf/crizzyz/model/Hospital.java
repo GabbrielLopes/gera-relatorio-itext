@@ -13,7 +13,7 @@ public class Hospital {
     private String endereco;
     private String numero;
     private String bairro;
-    private String nomeHospital;
+    private String nomeClinica;
     private String crm;
     private String cep;
 }
