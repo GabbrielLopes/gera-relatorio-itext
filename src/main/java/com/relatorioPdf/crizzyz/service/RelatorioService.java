@@ -1,4 +1,4 @@
-package com.relatorioPdf.crizzyz.controller;
+package com.relatorioPdf.crizzyz.service;
 
 import com.itextpdf.io.IOException;
 import com.itextpdf.kernel.color.Color;
@@ -12,24 +12,23 @@ import com.itextpdf.layout.property.AreaBreakType;
 import com.relatorioPdf.crizzyz.model.Hospital;
 import com.relatorioPdf.crizzyz.model.ListaRelatorio;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@RestController
-public class RelatorioController {
+@Service
+public class RelatorioService {
     String filePath = "src/main/resources/report.pdf";
 //
 //    @Autowired
 //    private ProdutoService service;
 
 
-    @GetMapping("/relatorio")
-    public ResponseEntity gerarRelatorio() throws IOException, FileNotFoundException {
+//    @GetMapping("/relatorio")
+    public void gerarRelatorio() throws IOException, FileNotFoundException {
         PdfWriter writer = new PdfWriter(filePath);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
@@ -68,38 +67,34 @@ public class RelatorioController {
                     p.setFixedPosition(x, y -= 10, 175);
                     document.add(p);
 
-                    p = new Paragraph(hospital.getNomeClinica()).setBold().setFontSize(8); // var - nome da
-                    p.setFixedPosition(x, y -= 15, 175);
+                    p = new Paragraph(hospital.getNomeClinica()).setBold().setFontSize(8).setWidth(175); // var - nome da clinica
+                    p.setFixedPosition(x , y -= 15, 175);
                     document.add(p);
 
                     p = new Paragraph("Diretor Técnico: ").setBold().setFontSize(7).setWidth(175); //fixo
-                    p.setFixedPosition(x, y -= 15, 175);
+                    p.setFixedPosition(x, y -= 10, 175);
                     document.add(p);
 
                     p = new Paragraph(hospital.getDiretorTecnico().toUpperCase() +
-                            "(CRM " + hospital.getCrm() + ")").setFontSize(7).setWidth(125);
-                    p.setFixedPosition(x += 50, y, 175);
+                            " (CRM " + hospital.getCrm() + ")").setFontSize(7).setFirstLineIndent(50);
+                    p.setFixedPosition(x, y -= 11 , 160);
                     document.add(p);
-
-                    p = new Paragraph(" ").setFontSize(8);
-                    p.setFixedPosition(x -= 50, y -= 10, 175);
-                    document.add(p);
-
 
                     p = new Paragraph("(" + hospital.getNomeClinica() + ")").setFontSize(8);
-                    p.setFixedPosition(x, y -= 10, 175);
+                    p.setFixedPosition(x, y -= 12.5f, 175);
+                    p.setMarginBottom(10);
                     document.add(p);
 
                     p = new Paragraph(hospital.getEndereco() + hospital.getNumero()).setFontSize(6);
-                    p.setFixedPosition(x, y -= 10, 175);
+                    p.setFixedPosition(x, y -= 7, 175);
                     document.add(p);
 
                     p = new Paragraph(hospital.getBairro() + hospital.getCep()).setFontSize(6);
-                    p.setFixedPosition(x, y -= 10, 175);
+                    p.setFixedPosition(x, y -= 7, 175);
                     document.add(p);
 
                     p = new Paragraph("Telefone: " + hospital.getTelefone()).setFontSize(6);
-                    p.setFixedPosition(x, y -= 10, 175);
+                    p.setFixedPosition(x, y -= 7, 175);
                     document.add(p);
                 }
                 if (y <= 100) {
@@ -108,7 +103,7 @@ public class RelatorioController {
                 }
 
                 if(x > 410){
-                    // todo essa linha gera uma nova pagina tudo que for add depois vai para proxima pagina.
+                    // essa linha gera uma nova pagina tudo que for add depois vai para proxima pagina.
                     document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
                     x = 10;
                     y = 780;
@@ -122,7 +117,6 @@ public class RelatorioController {
             System.out.println(e);
             document.close();
         }
-        return null;
     }
 
     private static void montaCabecalho(Document document) {
