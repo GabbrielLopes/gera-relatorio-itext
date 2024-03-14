@@ -17,17 +17,14 @@ import org.springframework.stereotype.Service;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 @Service
 public class RelatorioService {
     String filePath = "src/main/resources/report.pdf";
-//
-//    @Autowired
-//    private ProdutoService service;
 
 
-//    @GetMapping("/relatorio")
     public void gerarRelatorio() throws IOException, FileNotFoundException {
         PdfWriter writer = new PdfWriter(filePath);
         PdfDocument pdf = new PdfDocument(writer);
@@ -42,8 +39,8 @@ public class RelatorioService {
 
             // altura min 780 -  largura começa em 10 e 610 largura maxima
 
-            float yMax = 380;
-            float xMax = 410;
+            float larguraInicio = 10;
+            float alturaInicio = 780;
 
             float x = 10;
             float y = 780;
@@ -61,7 +58,7 @@ public class RelatorioService {
                     //se atingir o tamanho maximo da pagina vai para a proxima a coluna na primeira linha
                     if (y <= 100) {
                         x += 200;
-                        y = 780;
+                        y = alturaInicio;
                     }
                     p = new Paragraph(hospital.getBairro()).setFontSize(6).setBold().setItalic(); // var - bairro
                     p.setFixedPosition(x, y -= 10, 175);
@@ -99,14 +96,14 @@ public class RelatorioService {
                 }
                 if (y <= 100) {
                     x += 200;
-                    y = 780;
+                    y = alturaInicio;
                 }
 
                 if(x > 410){
                     // essa linha gera uma nova pagina tudo que for add depois vai para proxima pagina.
                     document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                    x = 10;
-                    y = 780;
+                    x = larguraInicio;
+                    y = alturaInicio;
                 }
             }
 
@@ -146,7 +143,7 @@ public class RelatorioService {
 
     private ArrayList<Hospital> listaHospitais() {
         ArrayList<Hospital> lista = new ArrayList<>();
-        int numeroAleatorio = (int) (Math.random() * 3);
+        int numeroAleatorio = new Random().nextInt(3);
         for (int i = 0; i < (numeroAleatorio == 0 ? 1 : numeroAleatorio); i++) {
             lista.add(new Hospital("ODEILTON TADEU SOARES", "(12) 3944-9090",
                     "Doutor Bezerra De Menezes, ", "700", "Jardim Terrão De Ouro",
